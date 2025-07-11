@@ -1,0 +1,1783 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中華電信AI數位製造館 - 完整專案文件</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+:root {
+--primary-color: #00a9ce;
+--secondary-color: #005a82;
+--accent-color: #ff6b35;
+--success-color: #00d084;
+--warning-color: #ffb900;
+--danger-color: #dc3545;
+--dark-bg: #0a0e27;
+--light-bg: #f8f9fa;
+--text-light: #ffffff;
+--text-dark: #2c3e50;
+--gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+--gradient-2: linear-gradient(135deg, #00a9ce 0%, #005a82 100%);
+--gradient-3: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+}
+
+body {
+font-family: 'Microsoft JhengHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+line-height: 1.6;
+color: var(--text-dark);
+background-color: var(--dark-bg);
+overflow-x: hidden;
+}
+
+/* 動態背景 */
+.bg-animation {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+background: var(--dark-bg);
+overflow: hidden;
+}
+
+.bg-animation::before {
+content: '';
+position: absolute;
+width: 150%;
+height: 150%;
+background: radial-gradient(circle at 20% 50%, rgba(0, 169, 206, 0.1) 0%, transparent 50%),
+radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+radial-gradient(circle at 40% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+animation: bgFloat 20s ease-in-out infinite;
+}
+
+@keyframes bgFloat {
+0%, 100% { transform: translate(0, 0) rotate(0deg); }
+50% { transform: translate(-50px, -50px) rotate(180deg); }
+}
+
+/* 粒子效果 */
+.particles {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: -1;
+}
+
+.particle {
+position: absolute;
+width: 4px;
+height: 4px;
+background: rgba(255, 255, 255, 0.5);
+border-radius: 50%;
+animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+from {
+transform: translateY(100vh) translateX(0);
+opacity: 0;
+}
+10% {
+opacity: 1;
+}
+90% {
+opacity: 1;
+}
+to {
+transform: translateY(-10vh) translateX(100px);
+opacity: 0;
+}
+}
+
+/* 導航欄 */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+background: rgba(10, 14, 39, 0.95);
+backdrop-filter: blur(10px);
+z-index: 1000;
+transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+background: rgba(10, 14, 39, 0.98);
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.nav-container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 1rem 2rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.nav-logo {
+font-size: 1.5rem;
+font-weight: bold;
+background: var(--gradient-2);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.nav-menu {
+display: flex;
+list-style: none;
+gap: 2rem;
+align-items: center;
+}
+
+.nav-link {
+color: var(--text-light);
+text-decoration: none;
+position: relative;
+transition: all 0.3s ease;
+font-weight: 500;
+}
+
+.nav-link::after {
+content: '';
+position: absolute;
+bottom: -5px;
+left: 0;
+width: 0;
+height: 2px;
+background: var(--accent-color);
+transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+width: 100%;
+}
+
+/* 主要內容區域 */
+.main-container {
+margin-top: 80px;
+min-height: 100vh;
+}
+
+/* 英雄區塊 */
+.hero-section {
+position: relative;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+
+.hero-content {
+text-align: center;
+z-index: 2;
+max-width: 1000px;
+padding: 2rem;
+}
+
+.hero-title {
+font-size: clamp(2.5rem, 5vw, 4rem);
+font-weight: bold;
+margin-bottom: 1.5rem;
+background: linear-gradient(135deg, #00a9ce, #ff6b35, #764ba2);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+0%, 100% { filter: hue-rotate(0deg); }
+50% { filter: hue-rotate(30deg); }
+}
+
+.hero-subtitle {
+font-size: 1.5rem;
+color: var(--text-light);
+margin-bottom: 2rem;
+opacity: 0.9;
+}
+
+.hero-description {
+font-size: 1.1rem;
+color: var(--text-light);
+opacity: 0.8;
+max-width: 800px;
+margin: 0 auto 3rem;
+line-height: 1.8;
+}
+
+.cta-buttons {
+display: flex;
+gap: 1.5rem;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+.cta-button {
+padding: 1rem 2.5rem;
+font-size: 1.1rem;
+font-weight: 600;
+border: none;
+border-radius: 50px;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.cta-primary {
+background: var(--gradient-2);
+color: white;
+position: relative;
+overflow: hidden;
+}
+
+.cta-primary::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 0;
+height: 0;
+background: rgba(255, 255, 255, 0.2);
+border-radius: 50%;
+transform: translate(-50%, -50%);
+transition: width 0.6s, height 0.6s;
+}
+
+.cta-primary:hover::before {
+width: 300px;
+height: 300px;
+}
+
+.cta-secondary {
+background: transparent;
+color: var(--text-light);
+border: 2px solid var(--accent-color);
+}
+
+.cta-secondary:hover {
+background: var(--accent-color);
+transform: translateY(-3px);
+box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+}
+
+/* 內容區塊 */
+.content-section {
+padding: 5rem 2rem;
+max-width: 1400px;
+margin: 0 auto;
+}
+
+.section-header {
+text-align: center;
+margin-bottom: 4rem;
+}
+
+.section-title {
+font-size: clamp(2rem, 4vw, 3rem);
+font-weight: bold;
+margin-bottom: 1rem;
+background: var(--gradient-2);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.section-subtitle {
+font-size: 1.2rem;
+color: var(--text-light);
+opacity: 0.8;
+}
+
+/* 卡片網格 */
+.card-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 2rem;
+margin-top: 3rem;
+}
+
+.tech-card {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 20px;
+padding: 2rem;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+}
+
+.tech-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, rgba(0, 169, 206, 0.1), rgba(255, 107, 53, 0.1));
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+
+.tech-card:hover {
+transform: translateY(-10px);
+border-color: var(--accent-color);
+}
+
+.tech-card:hover::before {
+opacity: 1;
+}
+
+.card-icon {
+font-size: 3rem;
+margin-bottom: 1rem;
+display: block;
+}
+
+.card-title {
+font-size: 1.5rem;
+font-weight: 600;
+color: var(--text-light);
+margin-bottom: 1rem;
+}
+
+.card-description {
+color: var(--text-light);
+opacity: 0.8;
+line-height: 1.6;
+}
+
+/* 標籤頁 */
+.tabs-container {
+background: rgba(255, 255, 255, 0.05);
+border-radius: 20px;
+padding: 2rem;
+margin-top: 3rem;
+}
+
+.tab-list {
+display: flex;
+flex-wrap: wrap;
+gap: 1rem;
+margin-bottom: 2rem;
+border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+padding-bottom: 1rem;
+}
+
+.tab-button {
+padding: 0.8rem 1.5rem;
+background: transparent;
+border: 2px solid rgba(255, 255, 255, 0.2);
+color: var(--text-light);
+border-radius: 25px;
+cursor: pointer;
+transition: all 0.3s ease;
+font-weight: 500;
+}
+
+.tab-button.active {
+background: var(--gradient-2);
+border-color: transparent;
+}
+
+.tab-button:hover:not(.active) {
+border-color: var(--accent-color);
+transform: translateY(-2px);
+}
+
+.tab-content {
+display: none;
+animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+/* 表格樣式 */
+.data-table {
+width: 100%;
+background: rgba(255, 255, 255, 0.05);
+border-radius: 15px;
+overflow: hidden;
+margin-top: 2rem;
+}
+
+.data-table th {
+background: var(--gradient-2);
+color: white;
+padding: 1.2rem;
+text-align: left;
+font-weight: 600;
+}
+
+.data-table td {
+padding: 1rem 1.2rem;
+border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+color: var(--text-light);
+}
+
+.data-table tr:hover {
+background: rgba(255, 255, 255, 0.05);
+}
+
+/* 統計數據 */
+.stats-container {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+margin-top: 3rem;
+}
+
+.stat-card {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 15px;
+padding: 2rem;
+text-align: center;
+transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+transform: scale(1.05);
+border-color: var(--accent-color);
+}
+
+.stat-number {
+font-size: 3rem;
+font-weight: bold;
+background: var(--gradient-3);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+margin-bottom: 0.5rem;
+}
+
+.stat-label {
+color: var(--text-light);
+opacity: 0.8;
+font-size: 1.1rem;
+}
+
+/* 時間軸 */
+.timeline {
+position: relative;
+padding: 2rem 0;
+margin-top: 3rem;
+}
+
+.timeline::before {
+content: '';
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 4px;
+height: 100%;
+background: var(--gradient-2);
+border-radius: 2px;
+}
+
+.timeline-item {
+position: relative;
+width: 50%;
+padding: 2rem;
+margin-bottom: 2rem;
+}
+
+.timeline-item:nth-child(odd) {
+left: 0;
+text-align: right;
+padding-right: 3rem;
+}
+
+.timeline-item:nth-child(even) {
+left: 50%;
+padding-left: 3rem;
+}
+
+.timeline-marker {
+position: absolute;
+top: 2rem;
+width: 20px;
+height: 20px;
+background: var(--accent-color);
+border-radius: 50%;
+border: 4px solid var(--dark-bg);
+box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.3);
+}
+
+.timeline-item:nth-child(odd) .timeline-marker {
+right: -10px;
+}
+
+.timeline-item:nth-child(even) .timeline-marker {
+left: -10px;
+}
+
+.timeline-content {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 15px;
+padding: 1.5rem;
+transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+transform: scale(1.02);
+border-color: var(--accent-color);
+}
+
+.timeline-title {
+font-size: 1.3rem;
+font-weight: 600;
+color: var(--text-light);
+margin-bottom: 0.5rem;
+}
+
+.timeline-date {
+color: var(--accent-color);
+font-weight: 500;
+margin-bottom: 0.5rem;
+}
+
+.timeline-description {
+color: var(--text-light);
+opacity: 0.8;
+}
+
+/* 頁尾 */
+.footer {
+background: rgba(10, 14, 39, 0.95);
+padding: 3rem 2rem 1rem;
+margin-top: 5rem;
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+max-width: 1400px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 3rem;
+margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+color: var(--text-light);
+margin-bottom: 1rem;
+font-size: 1.2rem;
+}
+
+.footer-section p,
+.footer-section a {
+color: var(--text-light);
+opacity: 0.7;
+text-decoration: none;
+transition: opacity 0.3s ease;
+}
+
+.footer-section a:hover {
+opacity: 1;
+color: var(--accent-color);
+}
+
+.footer-bottom {
+text-align: center;
+padding-top: 2rem;
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+color: var(--text-light);
+opacity: 0.6;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+.nav-menu {
+display: none;
+}
+
+.hero-title {
+font-size: 2rem;
+}
+
+.timeline-item {
+width: 100%;
+left: 0 !important;
+padding-left: 3rem !important;
+padding-right: 2rem !important;
+text-align: left !important;
+}
+
+.timeline::before {
+left: 20px;
+}
+
+.timeline-marker {
+left: 10px !important;
+right: auto !important;
+}
+
+.card-grid {
+grid-template-columns: 1fr;
+}
+
+.stats-container {
+grid-template-columns: 1fr;
+}
+}
+
+/* 滾動條樣式 */
+::-webkit-scrollbar {
+width: 10px;
+}
+
+::-webkit-scrollbar-track {
+background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+background: var(--gradient-2);
+border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: var(--accent-color);
+}
+
+/* 載入動畫 */
+.loader {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: var(--dark-bg);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+transition: opacity 0.5s ease;
+}
+
+.loader.hide {
+opacity: 0;
+pointer-events: none;
+}
+
+.loader-circle {
+width: 50px;
+height: 50px;
+border: 4px solid rgba(255, 255, 255, 0.1);
+border-top: 4px solid var(--accent-color);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* 可見性動畫 */
+.fade-in {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s ease;
+}
+
+.fade-in.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* 特殊效果 */
+.glow-text {
+text-shadow: 0 0 10px rgba(0, 169, 206, 0.5),
+0 0 20px rgba(0, 169, 206, 0.3),
+0 0 30px rgba(0, 169, 206, 0.1);
+}
+
+.neon-border {
+box-shadow: 0 0 5px rgba(0, 169, 206, 0.5),
+0 0 10px rgba(0, 169, 206, 0.3),
+0 0 15px rgba(0, 169, 206, 0.1),
+inset 0 0 5px rgba(0, 169, 206, 0.5);
+}
+
+/* 自定義圖示 */
+.icon-3d {
+display: inline-block;
+transform-style: preserve-3d;
+animation: rotate3d 10s linear infinite;
+}
+
+@keyframes rotate3d {
+from { transform: rotateY(0deg); }
+to { transform: rotateY(360deg); }
+}
+
+@keyframes rippleEffect {
+to {
+transform: scale(4);
+opacity: 0;
+}
+}
+
+.ripple {
+pointer-events: none;
+}
+</style>
+</head>
+<body>
+<!-- 載入動畫 -->
+<div class="loader" id="loader">
+<div class="loader-circle"></div>
+</div>
+
+<!-- 背景動畫 -->
+<div class="bg-animation"></div>
+<div class="particles" id="particles"></div>
+
+<!-- 導航欄 -->
+<nav class="navbar" id="navbar">
+<div class="nav-container">
+<div class="nav-logo">
+<span class="icon-3d">🚀</span>
+<span>AI數位製造館</span>
+</div>
+<ul class="nav-menu">
+<li><a href="#overview" class="nav-link">專案總覽</a></li>
+<li><a href="#tech" class="nav-link">技術架構</a></li>
+<li><a href="#business" class="nav-link">商業模式</a></li>
+<li><a href="#team" class="nav-link">團隊架構</a></li>
+<li><a href="#timeline" class="nav-link">實施計畫</a></li>
+<li><a href="#contact" class="nav-link">聯絡我們</a></li>
+</ul>
+</div>
+</nav>
+
+<!-- 主要內容 -->
+<main class="main-container">
+<!-- 英雄區塊 -->
+<section class="hero-section">
+<div class="hero-content fade-in">
+<h1 class="hero-title glow-text">中華電信AI數位製造基地</h1>
+<p class="hero-subtitle">「所想即所得」的極致客製化體驗</p>
+<p class="hero-description">
+結合人工智能設計生成、NFC智能技術、自動化生產和數位內容整合，
+為消費者提供全球首創的AI驅動客製化產品製造體驗。
+</p>
+<div class="cta-buttons">
+<a href="#overview" class="cta-button cta-primary">
+<span>探索專案詳情</span>
+<span>→</span>
+</a>
+<a href="#contact" class="cta-button cta-secondary">
+<span>聯絡我們</span>
+<span>📧</span>
+</a>
+</div>
+</div>
+</section>
+
+<!-- 專案總覽 -->
+<section id="overview" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">專案總覽</h2>
+<p class="section-subtitle">創新科技與商業價值的完美結合</p>
+</div>
+
+<div class="stats-container fade-in">
+<div class="stat-card neon-border">
+<div class="stat-number">480萬</div>
+<div class="stat-label">總投資額</div>
+</div>
+<div class="stat-card neon-border">
+<div class="stat-number">12個月</div>
+<div class="stat-label">投資回收期</div>
+</div>
+<div class="stat-card neon-border">
+<div class="stat-number">300%+</div>
+<div class="stat-label">年化ROI</div>
+</div>
+<div class="stat-card neon-border">
+<div class="stat-number">400件</div>
+<div class="stat-label">日產能目標</div>
+</div>
+</div>
+
+<div class="tabs-container fade-in">
+<div class="tab-list">
+<button class="tab-button active" onclick="showTab('exec-summary')">執行摘要</button>
+<button class="tab-button" onclick="showTab('value-prop')">價值主張</button>
+<button class="tab-button" onclick="showTab('market-opp')">市場機會</button>
+<button class="tab-button" onclick="showTab('success-factors')">成功因素</button>
+</div>
+
+<div id="exec-summary" class="tab-content active">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">執行摘要</h3>
+<p style="color: var(--text-light); opacity: 0.9; line-height: 1.8;">
+中華電信AI數位製造基地專案是一個創新的數位體驗項目，旨在台北三創生活園區建立全球首創的AI驅動客製化產品製造體驗館。
+該專案結合了人工智能設計生成、NFC智能技術、自動化生產和數位內容整合，為消費者提供「所想即所得」的個性化產品製造體驗。
+</p>
+<p style="color: var(--text-light); opacity: 0.9; line-height: 1.8; margin-top: 1rem;">
+專案總投資額為480萬新台幣，預計5個月完成建置，目標在12坪空間內實現日產400件客製化產品的產能。
+通過SCRUM敏捷開發方法論，組建了包含8個專業角色的跨領域團隊，涵蓋技術開發、產品管理、市場分析、營運管理和專案管理等各個層面。
+</p>
+</div>
+
+<div id="value-prop" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">核心價值主張</h3>
+<ul style="color: var(--text-light); opacity: 0.9; line-height: 2;">
+<li>🎯 <strong>即時個性化</strong>：30秒內完成AI設計生成，4分鐘完成產品製作</li>
+<li>🔗 <strong>數位實體融合</strong>：NFC技術連接實體產品與數位內容</li>
+<li>🏭 <strong>透明製造</strong>：全程可視化的自動化生產過程</li>
+<li>🎓 <strong>教育價值</strong>：STEM科普教育與AI技術體驗</li>
+<li>💎 <strong>品質保證</strong>：AI視覺檢測確保99.5%品質合格率</li>
+</ul>
+</div>
+
+<div id="market-opp" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">市場機會分析</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>市場指標</th>
+<th>數據</th>
+<th>來源</th>
+<th>商業意義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>三創日均人流</td>
+<td>30,000人次</td>
+<td>三創營運部</td>
+<td>充足的潛在客戶基礎</td>
+</tr>
+<tr>
+<td>目標客群占比</td>
+<td>75% (18-35歲)</td>
+<td>資策會MIC</td>
+<td>高度符合目標市場</td>
+</tr>
+<tr>
+<td>智能產品溢價接受度</td>
+<td>73%願付25%溢價</td>
+<td>東方線上</td>
+<td>價格策略支撐</td>
+</tr>
+<tr>
+<td>客製化重購率</td>
+<td>35%</td>
+<td>業界統計</td>
+<td>穩定收入來源</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="success-factors" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">關鍵成功因素</h3>
+<div class="card-grid">
+<div class="tech-card">
+<span class="card-icon">🚀</span>
+<h4 class="card-title">技術領先性</h4>
+<p class="card-description">全球首創AI+NFC融合技術，多項專利，8-15秒極速設計生成</p>
+</div>
+<div class="tech-card">
+<span class="card-icon">📍</span>
+<h4 class="card-title">地理優勢</h4>
+<p class="card-description">三創科技中心黃金地段，日均3萬人流量</p>
+</div>
+<div class="tech-card">
+<span class="card-icon">🏢</span>
+<h4 class="card-title">品牌背書</h4>
+<p class="card-description">中華電信品牌信任度，電信業龍頭地位</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 技術架構 -->
+<section id="tech" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">技術架構</h2>
+<p class="section-subtitle">創新AI技術與智能硬體的完美整合</p>
+</div>
+
+<div class="card-grid fade-in">
+<div class="tech-card">
+<span class="card-icon">🧠</span>
+<h3 class="card-title">AI設計系統</h3>
+<p class="card-description">
+基於Stable Diffusion XL的圖像生成引擎，結合GPT-4自然語言處理，
+實現8-15秒內完成設計生成，95%用戶滿意度。
+</p>
+<ul style="margin-top: 1rem; color: var(--text-light); opacity: 0.8;">
+<li>• 1024×1024高解析度輸出</li>
+<li>• 多語言設計描述支援</li>
+<li>• 100萬件產品樣本訓練</li>
+<li>• 即時預覽與調整</li>
+</ul>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">📱</span>
+<h3 class="card-title">NFC智能系統</h3>
+<p class="card-description">
+NTAG216晶片整合方案，實現物理產品與數位內容的完美融合，
+0.5秒完成寫入，10年使用壽命。
+</p>
+<ul style="margin-top: 1rem; color: var(--text-light); opacity: 0.8;">
+<li>• 924 bytes儲存容量</li>
+<li>• 多內容格式支援</li>
+<li>• 雲端內容管理</li>
+<li>• 即時數據分析</li>
+</ul>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🏭</span>
+<h3 class="card-title">自動化生產</h3>
+<p class="card-description">
+整合UV印刷機、6軸機械臂、AI視覺檢測的全自動生產線，
+實現5分鐘完成製作，99.5%品質合格率。
+</p>
+<ul style="margin-top: 1rem; color: var(--text-light); opacity: 0.8;">
+<li>• 1440dpi印刷精度</li>
+<li>• ±0.03mm機械精度</li>
+<li>• 30fps即時檢測</li>
+<li>• 24/7無人值守</li>
+</ul>
+</div>
+</div>
+
+<div class="tabs-container fade-in">
+<div class="tab-list">
+<button class="tab-button active" onclick="showTab('ai-arch')">AI架構</button>
+<button class="tab-button" onclick="showTab('hardware-spec')">硬體規格</button>
+<button class="tab-button" onclick="showTab('integration')">系統整合</button>
+<button class="tab-button" onclick="showTab('performance')">性能指標</button>
+</div>
+
+<div id="ai-arch" class="tab-content active">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">AI系統架構</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>模組名稱</th>
+<th>技術規格</th>
+<th>性能指標</th>
+<th>應用場景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>圖像生成引擎</td>
+<td>Stable Diffusion XL 1.0</td>
+<td>8-15秒生成時間</td>
+<td>設計圖生成</td>
+</tr>
+<tr>
+<td>自然語言處理</td>
+<td>GPT-4 Turbo API</td>
+<td>2-5秒處理時間</td>
+<td>需求理解轉換</td>
+</tr>
+<tr>
+<td>電腦視覺系統</td>
+<td>YOLOv8 + OpenCV</td>
+<td>30fps處理速度</td>
+<td>品質檢測</td>
+</tr>
+<tr>
+<td>推理加速引擎</td>
+<td>NVIDIA CUDA 12.0</td>
+<td>4任務並行</td>
+<td>GPU加速運算</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="hardware-spec" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">核心硬體規格</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>設備類型</th>
+<th>型號規格</th>
+<th>關鍵參數</th>
+<th>預算(萬)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI工作站</td>
+<td>Dell OptiPlex 7000 AIO</td>
+<td>RTX 4080, 64GB RAM</td>
+<td>50</td>
+</tr>
+<tr>
+<td>UV印刷機</td>
+<td>Roland LEF2-300</td>
+<td>1440dpi, 6色+白+透明</td>
+<td>80</td>
+</tr>
+<tr>
+<td>機械臂</td>
+<td>UR5e協作機器人</td>
+<td>±0.03mm精度, 5kg負載</td>
+<td>60</td>
+</tr>
+<tr>
+<td>視覺檢測</td>
+<td>Cognex In-Sight 7000</td>
+<td>4K解析度, 0.01mm精度</td>
+<td>35</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="integration" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">Hami生態系統整合</h3>
+<div class="card-grid">
+<div class="tech-card">
+<span class="card-icon">💳</span>
+<h4 class="card-title">Hami Points支付</h4>
+<p class="card-description">即時點數扣款、餘額查詢、交易記錄同步</p>
+</div>
+<div class="tech-card">
+<span class="card-icon">👤</span>
+<h4 class="card-title">會員系統整合</h4>
+<p class="card-description">身份驗證、偏好記錄、購買歷史追蹤</p>
+</div>
+<div class="tech-card">
+<span class="card-icon">☁️</span>
+<h4 class="card-title">雲端服務整合</h4>
+<p class="card-description">HiCloud存儲、作品同步、跨裝置存取</p>
+</div>
+</div>
+</div>
+
+<div id="performance" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">系統性能指標</h3>
+<div class="stats-container">
+<div class="stat-card">
+<div class="stat-number">8-15秒</div>
+<div class="stat-label">AI設計生成</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">99.5%</div>
+<div class="stat-label">系統可用率</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">95%</div>
+<div class="stat-label">用戶滿意度</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">85%</div>
+<div class="stat-label">快取命中率</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 商業模式 -->
+<section id="business" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">商業模式</h2>
+<p class="section-subtitle">創新營收模式與財務分析</p>
+</div>
+
+<div class="tabs-container fade-in">
+<div class="tab-list">
+<button class="tab-button active" onclick="showTab('revenue-model')">營收模式</button>
+<button class="tab-button" onclick="showTab('financial-forecast')">財務預測</button>
+<button class="tab-button" onclick="showTab('roi-analysis')">投資回報</button>
+<button class="tab-button" onclick="showTab('risk-assess')">風險評估</button>
+</div>
+
+<div id="revenue-model" class="tab-content active">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">多元營收模式</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>產品/服務</th>
+<th>定價</th>
+<th>營收占比</th>
+<th>毛利率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFC智能鑰匙圈</td>
+<td>NT$ 480</td>
+<td>40%</td>
+<td>78%</td>
+</tr>
+<tr>
+<td>個性化徽章</td>
+<td>NT$ 300</td>
+<td>25%</td>
+<td>80%</td>
+</tr>
+<tr>
+<td>客製化手機支架</td>
+<td>NT$ 380</td>
+<td>20%</td>
+<td>75%</td>
+</tr>
+<tr>
+<td>藝術卡片</td>
+<td>NT$ 250</td>
+<td>10%</td>
+<td>82%</td>
+</tr>
+<tr>
+<td>教育體驗服務</td>
+<td>NT$ 200</td>
+<td>5%</td>
+<td>90%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="financial-forecast" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">5年財務預測</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>年度</th>
+<th>營業收入</th>
+<th>營業成本</th>
+<th>毛利率</th>
+<th>淨利</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1年</td>
+<td>1,620萬</td>
+<td>405萬</td>
+<td>75%</td>
+<td>384萬</td>
+</tr>
+<tr>
+<td>第2年</td>
+<td>2,160萬</td>
+<td>540萬</td>
+<td>75%</td>
+<td>596萬</td>
+</tr>
+<tr>
+<td>第3年</td>
+<td>2,700萬</td>
+<td>675萬</td>
+<td>75%</td>
+<td>808萬</td>
+</tr>
+<tr>
+<td>第4年</td>
+<td>3,240萬</td>
+<td>810萬</td>
+<td>75%</td>
+<td>1,020萬</td>
+</tr>
+<tr>
+<td>第5年</td>
+<td>3,780萬</td>
+<td>945萬</td>
+<td>75%</td>
+<td>1,232萬</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="roi-analysis" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">投資回報分析</h3>
+<div class="stats-container">
+<div class="stat-card">
+<div class="stat-number">325%</div>
+<div class="stat-label">IRR內部報酬率</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">2,840萬</div>
+<div class="stat-label">NPV淨現值</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">12個月</div>
+<div class="stat-label">投資回收期</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">AAA</div>
+<div class="stat-label">投資評等</div>
+</div>
+</div>
+</div>
+
+<div id="risk-assess" class="tab-content">
+<h3 style="color: var(--text-light); margin-bottom: 1rem;">風險評估矩陣</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>風險類別</th>
+<th>風險等級</th>
+<th>影響程度</th>
+<th>應對策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>市場風險</td>
+<td style="color: #ffb900;">中等</td>
+<td>市場接受度、競爭</td>
+<td>市場教育、差異化定位</td>
+</tr>
+<tr>
+<td>技術風險</td>
+<td style="color: #00d084;">低</td>
+<td>系統穩定性</td>
+<td>冗餘設計、預防維護</td>
+</tr>
+<tr>
+<td>財務風險</td>
+<td style="color: #00d084;">低</td>
+<td>現金流、成本控制</td>
+<td>嚴格預算管理</td>
+</tr>
+<tr>
+<td>營運風險</td>
+<td style="color: #ffb900;">中等</td>
+<td>人才、供應鏈</td>
+<td>培訓計畫、多元供應商</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- 團隊架構 -->
+<section id="team" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">SCRUM團隊架構</h2>
+<p class="section-subtitle">跨領域專業團隊的敏捷協作</p>
+</div>
+
+<div class="card-grid fade-in">
+<div class="tech-card">
+<span class="card-icon">📋</span>
+<h3 class="card-title">SM - Scrum Master</h3>
+<p class="card-description">專案總管，負責整體專案管控、風險管理和團隊協調</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🎯</span>
+<h3 class="card-title">MRA - 市場研究分析師</h3>
+<p class="card-description">市場策略制定、數據分析、競爭情報收集</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🏭</span>
+<h3 class="card-title">PLM - 生產線管理師</h3>
+<p class="card-description">空間規劃、產能設計、品質控制流程</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🎨</span>
+<h3 class="card-title">UXD - 用戶體驗設計師</h3>
+<p class="card-description">體驗設計、客戶旅程規劃、介面設計</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🧠</span>
+<h3 class="card-title">AIDSE - AI設計系統工程師</h3>
+<p class="card-description">AI模型開發、系統架構、技術整合</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">💼</span>
+<h3 class="card-title">BO - 營運管理專員</h3>
+<p class="card-description">商業營運、日常管理、人力資源</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">🔧</span>
+<h3 class="card-title">HIS - 硬體整合專家</h3>
+<p class="card-description">系統整合、設備管理、技術支援</p>
+</div>
+
+<div class="tech-card">
+<span class="card-icon">💰</span>
+<h3 class="card-title">FA - 財務分析師</h3>
+<p class="card-description">財務規劃、投資分析、成本控制</p>
+</div>
+</div>
+</section>
+
+<!-- 實施計畫 -->
+<section id="timeline" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">實施計畫時程</h2>
+<p class="section-subtitle">5個月完成從概念到營運的完整建置</p>
+</div>
+
+<div class="timeline fade-in">
+<div class="timeline-item">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<h4 class="timeline-title">專案啟動</h4>
+<p class="timeline-date">第1個月</p>
+<p class="timeline-description">
+簽署三創合約、完成設備採購談判、核心團隊招募到位
+</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<h4 class="timeline-title">基礎建設</h4>
+<p class="timeline-date">第2-3個月</p>
+<p class="timeline-description">
+空間裝修與基礎設施建設、核心設備安裝調試、網路與軟體環境建置
+</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<h4 class="timeline-title">系統整合</h4>
+<p class="timeline-date">第4個月</p>
+<p class="timeline-description">
+AI系統訓練與優化、端到端流程測試、Hami生態系統整合
+</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<h4 class="timeline-title">營運準備</h4>
+<p class="timeline-date">第4.5個月</p>
+<p class="timeline-description">
+員工招募與培訓、營運流程建立、內部試營運
+</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-marker"></div>
+<div class="timeline-content">
+<h4 class="timeline-title">正式上線</h4>
+<p class="timeline-date">第5個月</p>
+<p class="timeline-description">
+軟性開幕測試、媒體體驗報導、正式對外營業
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 聯絡資訊 -->
+<section id="contact" class="content-section">
+<div class="section-header fade-in">
+<h2 class="section-title">聯絡我們</h2>
+<p class="section-subtitle">期待與您攜手開創AI數位體驗新時代</p>
+</div>
+
+<div class="card-grid fade-in">
+<div class="tech-card" style="text-align: center;">
+<span class="card-icon">📧</span>
+<h3 class="card-title">專案聯絡人</h3>
+<p class="card-description">
+張宗堯<br>
+專案代號：CHT-AI-SOUL-SYNTREND<br>
+提案日期：2025年7月
+</p>
+</div>
+
+<div class="tech-card" style="text-align: center;">
+<span class="card-icon">🏢</span>
+<h3 class="card-title">中華電信總部</h3>
+<p class="card-description">
+台北市中正區信義路一段21-3號<br>
+創新發展部門<br>
+數位轉型專案小組
+</p>
+</div>
+
+<div class="tech-card" style="text-align: center;">
+<span class="card-icon">🚀</span>
+<h3 class="card-title">行動呼籲</h3>
+<p class="card-description">
+機會稍縱即逝<br>
+建議立即啟動三創AI數位製造館試點專案<br>
+搶占AI時代數位體驗制高點！
+</p>
+</div>
+</div>
+</section>
+</main>
+
+<!-- 頁尾 -->
+<footer class="footer">
+<div class="footer-content">
+<div class="footer-section">
+<h3>關於專案</h3>
+<p>中華電信AI數位靈魂館是結合AI技術與客製化製造的創新體驗專案，代表電信業向數位服務轉型的重要里程碑。</p>
+</div>
+
+<div class="footer-section">
+<h3>快速連結</h3>
+<a href="#overview">專案總覽</a><br>
+<a href="#tech">技術架構</a><br>
+<a href="#business">商業模式</a><br>
+<a href="#timeline">實施計畫</a>
+</div>
+
+<div class="footer-section">
+<h3>聯絡資訊</h3>
+<p>專案代號：CHT-AI-SOUL-SYNTREND</p>
+<p>報告編制：Michael's SUPER AGENT V0.1</p>
+<p>文件版本：v1.0</p>
+</div>
+</div>
+
+<div class="footer-bottom">
+<p>&copy; 2025 中華電信 AI數位製造館專案. All rights reserved.</p>
+</div>
+</footer>
+
+<script>
+// 載入動畫
+window.addEventListener('load', function() {
+setTimeout(() => {
+document.getElementById('loader').classList.add('hide');
+}, 1000);
+});
+
+// 導航欄滾動效果
+window.addEventListener('scroll', function() {
+const navbar = document.getElementById('navbar');
+if (window.scrollY > 50) {
+navbar.classList.add('scrolled');
+} else {
+navbar.classList.remove('scrolled');
+}
+});
+
+// 粒子動畫
+function createParticles() {
+const particlesContainer = document.getElementById('particles');
+const particleCount = 50;
+
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('div');
+particle.className = 'particle';
+particle.style.left = Math.random() * 100 + '%';
+particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+particle.style.animationDelay = Math.random() * 10 + 's';
+particlesContainer.appendChild(particle);
+}
+}
+
+createParticles();
+
+// 標籤頁切換
+function showTab(tabId) {
+// 隱藏所有標籤內容
+const allTabs = document.querySelectorAll('.tab-content');
+allTabs.forEach(tab => {
+tab.classList.remove('active');
+});
+
+// 移除所有按鈕的active類
+const allButtons = document.querySelectorAll('.tab-button');
+allButtons.forEach(btn => {
+btn.classList.remove('active');
+});
+
+// 顯示選中的標籤
+document.getElementById(tabId).classList.add('active');
+
+// 添加active類到點擊的按鈕
+event.target.classList.add('active');
+}
+
+// 滾動顯示動畫
+const observerOptions = {
+threshold: 0.1,
+rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, observerOptions);
+
+// 觀察所有需要動畫的元素
+document.querySelectorAll('.fade-in').forEach(el => {
+observer.observe(el);
+});
+
+// 平滑滾動
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+target.scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+}
+});
+});
+
+// 數字動畫
+function animateNumbers() {
+const numbers = document.querySelectorAll('.stat-number');
+numbers.forEach(num => {
+const finalValue = num.textContent;
+const isPercentage = finalValue.includes('%');
+const isPrice = finalValue.includes('萬');
+const hasPlus = finalValue.includes('+');
+let numericValue = parseFloat(finalValue.replace(/[^\d.]/g, ''));
+
+if (!isNaN(numericValue)) {
+num.textContent = '0';
+const increment = numericValue / 50;
+let currentValue = 0;
+
+const updateNumber = () => {
+currentValue += increment;
+if (currentValue >= numericValue) {
+currentValue = numericValue;
+if (isPercentage) {
+num.textContent = Math.round(currentValue) + '%' + (hasPlus ? '+' : '');
+} else if (isPrice) {
+num.textContent = Math.round(currentValue) + '萬';
+} else {
+num.textContent = Math.round(currentValue) + (hasPlus ? '+' : '');
+}
+} else {
+if (isPercentage) {
+num.textContent = Math.round(currentValue) + '%';
+} else if (isPrice) {
+num.textContent = Math.round(currentValue) + '萬';
+} else {
+num.textContent = Math.round(currentValue);
+}
+requestAnimationFrame(updateNumber);
+}
+};
+
+// 當元素進入視窗時開始動畫
+const numberObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+updateNumber();
+numberObserver.unobserve(entry.target);
+}
+});
+}, { threshold: 0.5 });
+
+numberObserver.observe(num);
+}
+});
+}
+
+animateNumbers();
+
+// 添加hover效果到卡片
+document.querySelectorAll('.tech-card, .stat-card').forEach(card => {
+card.addEventListener('mouseenter', function() {
+this.style.transform = 'translateY(-10px) scale(1.02)';
+});
+
+card.addEventListener('mouseleave', function() {
+this.style.transform = 'translateY(0) scale(1)';
+});
+});
+
+// 添加打字機效果
+function typeWriter(element, text, speed = 50) {
+let i = 0;
+element.textContent = '';
+function type() {
+if (i < text.length) {
+element.textContent += text.charAt(i);
+i++;
+setTimeout(type, speed);
+}
+}
+type();
+}
+
+// 應用打字機效果到標題
+const heroTitle = document.querySelector('.hero-title');
+if (heroTitle) {
+const originalText = heroTitle.textContent;
+const titleObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+typeWriter(heroTitle, originalText, 100);
+titleObserver.unobserve(entry.target);
+}
+});
+}, { threshold: 0.5 });
+
+titleObserver.observe(heroTitle);
+}
+
+// 添加視差滾動效果
+window.addEventListener('scroll', () => {
+const scrolled = window.pageYOffset;
+const parallax = document.querySelector('.hero-section');
+if (parallax) {
+parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+}
+});
+
+// 表格行hover效果
+document.querySelectorAll('.data-table tr').forEach(row => {
+row.addEventListener('mouseenter', function() {
+this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+});
+
+row.addEventListener('mouseleave', function() {
+this.style.backgroundColor = '';
+});
+});
+
+// 添加進度指示器
+function updateProgressIndicator() {
+const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+const scrolled = (winScroll / height) * 100;
+
+const progressBar = document.createElement('div');
+progressBar.style.cssText = `
+position: fixed;
+top: 0;
+left: 0;
+width: ${scrolled}%;
+height: 3px;
+background: linear-gradient(90deg, #00a9ce, #ff6b35);
+z-index: 9999;
+transition: width 0.3s ease;
+`;
+progressBar.id = 'progress-bar';
+
+const existingBar = document.getElementById('progress-bar');
+if (existingBar) {
+existingBar.style.width = scrolled + '%';
+} else {
+document.body.appendChild(progressBar);
+}
+}
+
+window.addEventListener('scroll', updateProgressIndicator);
+
+// 初始化所有動畫
+document.addEventListener('DOMContentLoaded', function() {
+// 添加載入完成的動畫
+document.body.style.opacity = '0';
+setTimeout(() => {
+document.body.style.transition = 'opacity 1s ease';
+document.body.style.opacity = '1';
+}, 100);
+
+// 初始化所有互動元素
+const allInteractiveElements = document.querySelectorAll('.cta-button, .tab-button, .nav-link');
+allInteractiveElements.forEach(el => {
+el.addEventListener('click', function(e) {
+// 添加點擊波紋效果
+const ripple = document.createElement('span');
+ripple.classList.add('ripple');
+this.appendChild(ripple);
+
+const rect = this.getBoundingClientRect();
+const size = Math.max(rect.width, rect.height);
+const x = e.clientX - rect.left - size / 2;
+const y = e.clientY - rect.top - size / 2;
+
+ripple.style.cssText = `
+position: absolute;
+width: ${size}px;
+height: ${size}px;
+left: ${x}px;
+top: ${y}px;
+background: rgba(255, 255, 255, 0.5);
+border-radius: 50%;
+transform: scale(0);
+animation: rippleEffect 0.6s ease;
+`;
+
+setTimeout(() => ripple.remove(), 600);
+});
+});
+});
+
+// 添加波紋動畫CSS
+const style = document.createElement('style');
+style.textContent = `
+@keyframes rippleEffect {
+to {
+transform: scale(4);
+opacity: 0;
+}
+}
+
+.ripple {
+pointer-events: none;
+}
+`;
+document.head.appendChild(style);
+
+// 控制台歡迎訊息
+console.log('%c🚀 歡迎來到中華電信AI數位製造館！', 'font-size: 24px; font-weight: bold; color: #00a9ce;');
+console.log('%c探索「所想即所得」的極致體驗', 'font-size: 16px; color: #ff6b35;');
+</script>
+</body>
+</html>
